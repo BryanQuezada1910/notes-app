@@ -7,6 +7,7 @@ import passportConfig from './config/passport-config.js';
 import { googleAuthMiddleware } from './middlewares/googleAuthMiddleware.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import cookieParser from 'cookie-parser';
 
 // Configuración de variables de entorno
 configDotenv();
@@ -49,12 +50,17 @@ app.use('/auth', googleAuthRoutes);
 
 // Ruta principal de la aplicación
 app.get('/', (req, res) => {
+  // Si el usuario está autenticado, redirige a la página de notas
+  if (req.isAuthenticated()) {
+    return res.sendFile(path.join(__dirname, 'views', 'notes.html'));
+  }
+  // Si el usuario no está autenticado, redirige a la página de inicio
   res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
-app.get('/notes', googleAuthMiddleware, (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'notes.html'));  
-});
+// app.get('/notes', googleAuthMiddleware, (req, res) => {
+//   res.sendFile(path.join(__dirname, 'views', 'notes.html'));  
+// });
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

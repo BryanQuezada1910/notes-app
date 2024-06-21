@@ -9,7 +9,7 @@ export const googleAuth = passport.authenticate('google', { scope: ['profile', '
 export const googleAuthCallback = passport.authenticate('google', { failureRedirect: '/' });
 
 export const googleAuthRedirect = (req, res) => {
-  res.redirect('/notes');
+  res.redirect('/');
 };
 
 export const logout = (req, res) => {
