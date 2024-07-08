@@ -23,11 +23,14 @@ const app = express();
 
 app.use(express.json());
 
+app.use(express.static(path.join(__dirname, 'public')));  // Para servir archivos estáticos
+
 // Conexion a la base de datos
 connectToDatabase();
 
 // Configuración de la sesión con express-session
 app.use(session({
+  name: 'session-id-google-auth',
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false, // Solo crea la sesión si algo cambia

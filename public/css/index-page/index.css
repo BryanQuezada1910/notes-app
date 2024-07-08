@@ -1,0 +1,29 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #393e46;
+    color: #eeeeee;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+    padding: 0;
+}
+
+@media only screen and (max-width: 768px) {
+    
+}
+
+@media only screen and (min-width: 769px) and (max-width: 1024px) {
+    
+}
+
+@media only screen and (min-width: 1025px) {
+    #principal-container {
+        height: 100vh;
+    }
+}

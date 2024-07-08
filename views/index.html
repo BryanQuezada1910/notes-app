@@ -1,61 +1,81 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>App de Notas</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+    <!--Import Google Icon Font-->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <!--Import materialize.css-->
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="css/materialize.min.css"
+      media="screen,projection"
+    />
+    <!--Import index.css-->
+    <link rel="stylesheet" href="css/index-page/index.css" />
+  </head>
 
-        .container {
-            text-align: center;
-        }
+  <body>
+    <div id="principal-container">
+      <!--Navbar-->
+      <nav class="transparent">
+        <div class="container nav-wrapper">
+          <a href="#!" class="brand-logo">App de Notas</a>
+          <a href="#" data-target="mobile-demo" class="sidenav-trigger"
+            ><i class="material-icons">menu</i></a
+          >
+          <ul class="right hide-on-med-and-down">
+            <li><a href="sass.html">Sass</a></li>
+            <li><a href="badges.html">Components</a></li>
+            <li><a href="collapsible.html">Javascript</a></li>
+            <li><a href="mobile.html">Mobile</a></li>
+          </ul>
+        </div>
+      </nav>
 
-        h1 {
-            font-size: 2.5em;
-            color: #333;
-            margin-bottom: 20px;
-        }
+      <!--Sidenav-->
+      <ul class="sidenav" id="mobile-demo">
+        <li><a href="sass.html">Sass</a></li>
+        <li><a href="badges.html">Components</a></li>
+        <li><a href="collapsible.html">Javascript</a></li>
+        <li><a href="mobile.html">Mobile</a></li>
+      </ul>
 
-        p {
-            font-size: 1.2em;
-            color: #666;
-            margin-bottom: 30px;
-        }
+      <div class="row">
+        <!--Contenido-->
+        <div class="col s12 m6">
+          <section>
+            <div class="valign-wrapper">
+              <div class="valign">
+                <h1>Bienvenido a la App de Notas</h1>
+                <p>Esta es una aplicación para tomar y gestionar tus notas.</p>
+                <p>Para comenzar, inicia sesión con tu cuenta de Google.</p>
+              </div>
+            </div>
+          </section>
+        </div>
 
-        #login-button img {
-            max-width: 200px;
-            width: 100%;
-            height: auto;
-        }
-
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 2em;
-            }
-
-            p {
-                font-size: 1em;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Bienvenido a la App de Notas</h1>
-        <p>Esta es una aplicación para tomar y gestionar tus notas.</p>
-        <a href="/auth/login/google" id="login-button">
-            <img src="https://developers.google.com/identity/images/btn_google_signin_light_normal_web.png" alt="Iniciar sesión con Google">
-        </a>
+        <!--Formulario de registro-->
+        <div class="col s12 m6">
+          <section>
+            <a
+              style="text-transform: none;"
+              class="waves-effect waves-light btn"
+              href="/auth/login/google"
+              id="login-button"
+              >Iniciar Sesión con Google</a
+            >
+          </section>
+        </div>
+      </div>
     </div>
-</body>
+
+    <script type="text/javascript" src="/js/materialize.min.js"></script>
+    <script type="text/javascript" src="/js/index-page/index.js"></script>
+  </body>
 </html>
