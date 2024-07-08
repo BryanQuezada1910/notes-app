@@ -1,9 +1,5 @@
 import passport from 'passport';
 
-export const login = (req, res) => {
-  res.send('Login with Google');
-};
-
 export const googleAuth = passport.authenticate('google', { scope: ['profile', 'email'] });
 
 export const googleAuthCallback = passport.authenticate('google', { failureRedirect: '/' });

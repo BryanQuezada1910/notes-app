@@ -7,7 +7,7 @@ import passportConfig from './config/passport-config.js';
 import { googleAuthMiddleware } from './middlewares/googleAuthMiddleware.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import cookieParser from 'cookie-parser';
+import { connectToDatabase } from './config/database.js';
 
 // Configuración de variables de entorno
 configDotenv();
@@ -24,12 +24,7 @@ const app = express();
 app.use(express.json());
 
 // Conexion a la base de datos
-mongoose.connect(process.env.MONGO_URI)
-.then(() => {
-  console.log('Connected to MongoDB');
-}).catch((err) => {
-  console.log('Error connecting to MongoDB', err);
-});
+connectToDatabase();
 
 // Configuración de la sesión con express-session
 app.use(session({
