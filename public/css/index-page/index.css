@@ -5,7 +5,7 @@
 }
 
 body {
-    background-color: #222831;
+    background-color: #393e46;
     color: #eeeeee;
 }
 
@@ -14,16 +14,22 @@ nav {
     box-shadow: none;
 }
 
-h1, h2, h3, h4, h5, h6, p {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
     margin: 0;
     padding: 0;
 }
 
 @media only screen and (max-width: 600.8px) {
-    
+
 }
 
-@media only screen and (min-width: 601) and (max-width: 991.8) {
+@media only screen and (min-width: 601px) and (max-width: 991.8px) {
     
 }
 
@@ -32,7 +38,8 @@ h1, h2, h3, h4, h5, h6, p {
         height: 100vh;
     }
 
-    #seccion-1, #seccion-2 {
+    #seccion-1,
+    #seccion-2 {
         height: calc(100vh - 64px);
     }
 }
