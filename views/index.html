@@ -23,7 +23,7 @@
   <body>
     <div id="principal-container">
       <!--Navbar-->
-      <nav class="transparent">
+      <nav>
         <div class="container nav-wrapper">
           <a href="#!" class="brand-logo">App de Notas</a>
           <a href="#" data-target="mobile-demo" class="sidenav-trigger"
@@ -48,30 +48,69 @@
 
       <div class="row">
         <!--Contenido-->
-        <div class="col s12 m6">
-          <section>
-            <div class="valign-wrapper">
-              <div class="valign">
-                <h1>Bienvenido a la App de Notas</h1>
-                <p>Esta es una aplicación para tomar y gestionar tus notas.</p>
-                <p>Para comenzar, inicia sesión con tu cuenta de Google.</p>
-              </div>
-            </div>
-          </section>
-        </div>
+        <section id="seccion-1" class="col s12 m12 l6 valign-wrapper">
+          <div class="center transparent">
+            <h1>Bienvenido a la App de Notas</h1>
+            <p>Esta es una aplicación para tomar y gestionar tus notas.</p>
+            <p>Para comenzar, inicia sesión con tu cuenta de Google.</p>
+          </div>
+        </section>
 
         <!--Formulario de registro-->
-        <div class="col s12 m6">
-          <section>
-            <a
-              style="text-transform: none;"
-              class="waves-effect waves-light btn"
-              href="/auth/login/google"
-              id="login-button"
-              >Iniciar Sesión con Google</a
-            >
-          </section>
-        </div>
+        <section id="seccion-2" class="col s12 m12 l6 valign-wrapper">
+          <form class="container  s12">
+            <h2 class="center">Regístrate</h2>
+            <div class="row">
+              <div class="input-field col s6">
+                <input id="first_name" type="text" class="validate" />
+                <label for="first_name">First Name</label>
+              </div>
+              <div class="input-field col s6">
+                <input id="last_name" type="text" class="validate" />
+                <label for="last_name">Last Name</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s12">
+                <input id="password" type="password" class="validate" />
+                <label for="password">Password</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s12">
+                <input id="email" type="email" class="validate" />
+                <label for="email">Email</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="valign-wrapper">
+                <div class="col s12 m4">
+                  <a
+                    style="text-transform: none;"
+                    class="waves-effect waves-light btn"
+                    href="#!"
+                    id="login-button"
+                    >Registrate</a
+                  >
+                </div>
+                <div class="col s12 m8">
+                  <p>¿Ya tienes cuenta? <a href="/login">Inicia Sesión</a></p>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s6">
+                <a
+                  style="text-transform: none;"
+                  class="waves-effect waves-light btn"
+                  href="/auth/login/google"
+                  id="login-button"
+                  >Iniciar Sesion con Google</a
+                >
+              </div>
+            </div>
+          </form>
+        </section>
       </div>
     </div>
 

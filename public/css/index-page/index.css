@@ -5,8 +5,13 @@
 }
 
 body {
-    background-color: #393e46;
+    background-color: #222831;
     color: #eeeeee;
+}
+
+nav {
+    background-color: #222831;
+    box-shadow: none;
 }
 
 h1, h2, h3, h4, h5, h6, p {
@@ -14,16 +19,20 @@ h1, h2, h3, h4, h5, h6, p {
     padding: 0;
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 600.8px) {
     
 }
 
-@media only screen and (min-width: 769px) and (max-width: 1024px) {
+@media only screen and (min-width: 601) and (max-width: 991.8) {
     
 }
 
-@media only screen and (min-width: 1025px) {
+@media only screen and (min-width: 992px) {
     #principal-container {
         height: 100vh;
+    }
+
+    #seccion-1, #seccion-2 {
+        height: calc(100vh - 64px);
     }
 }
