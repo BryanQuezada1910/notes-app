@@ -1,12 +1,13 @@
-import express from 'express';
-import { configDotenv } from 'dotenv';
-import googleAuthRoutes from './routes/googleAuthRoutes.js';
-import session from 'express-session';
-import passportConfig from './config/passport-config.js';
-import { googleAuthMiddleware } from './middlewares/googleAuthMiddleware.js';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { connectToDatabase } from './config/database.js';
+import express from "express";
+import { configDotenv } from "dotenv";
+import googleAuthRoutes from "./routes/googleAuthRoutes.js";
+import session from "express-session";
+import passportConfig from "./config/passport-config.js";
+import { googleAuthMiddleware } from "./middlewares/googleAuthMiddleware.js";
+import path from "path";
+import { fileURLToPath } from "url";
+import { connectToDatabase } from "./config/database.js";
+import noteRoutes from "./routes/noteRoutes.js";
 
 // Configuración de variables de entorno
 configDotenv();
@@ -22,38 +23,43 @@ const app = express();
 
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, 'public')));  // Para servir archivos estáticos
+app.use(express.static(path.join(__dirname, "public"))); // Para servir archivos estáticos
 
 // Conexion a la base de datos
 connectToDatabase();
 
 // Configuración de la sesión con express-session
-app.use(session({
-  name: 'sid',
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false, // Solo crea la sesión si algo cambia
-  cookie: {
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 1 semana
-    httpOnly: true, // La cookie solo se puede acceder desde el servidor
-    sameSite: 'lax', // Protección contra ataques CSRF
-  }
-}));
+app.use(
+  session({
+    name: "cookie_sid",
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false, // Solo crea la sesión si algo cambia
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 semana
+      httpOnly: true, // La cookie solo se puede acceder desde el servidor
+      sameSite: "lax", // Protección contra ataques CSRF
+    },
+  })
+);
 
 // Configuración de Passport
 app.use(passportConfig.initialize());
 app.use(passportConfig.session());
 
 // Ruta de autenticación con Google
-app.use('/auth', googleAuthRoutes);
+app.use("/auth", googleAuthRoutes);
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'index.html'));
+// Ruta de Autenticación
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "index.html"));
 });
 
+app.use("/notes", noteRoutes);
+
 // Ruta principal de la aplicación
-app.get('/notes', googleAuthMiddleware, (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'notes.html'));
+app.get("/notes", googleAuthMiddleware, (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "notes.html"));
 });
 
 app.listen(PORT, () => {

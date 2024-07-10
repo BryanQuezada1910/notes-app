@@ -1,12 +1,14 @@
-import { Router } from 'express';
-import { googleAuth, googleAuthCallback, googleAuthRedirect, logout } from '../controllers/googleAuthController.js';
+import { Router } from "express";
+import {
+  googleAuth,
+  googleAuthCallback,
+  googleAuthRedirect,
+} from "../controllers/googleAuthController.js";
 
 const router = Router();
 
-router.get('/login/google', googleAuth);
+router.get("/login/google", googleAuth);
 
-router.get('/google/callback', googleAuthCallback, googleAuthRedirect);
-
-router.get('/logout/google', logout);
+router.get("/google/callback", googleAuthCallback, googleAuthRedirect);
 
 export default router;
