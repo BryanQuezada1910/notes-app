@@ -33,6 +33,7 @@ passport.use(
           return done(null, user);
         } else {
           user = await User.create(newUser);
+          console.log("Usuario creado", user);
           return done(null, user);
         }
       } catch (err) {
