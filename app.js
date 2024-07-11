@@ -1,6 +1,6 @@
 import express from "express";
 import { configDotenv } from "dotenv";
-import googleAuthRoutes from "./routes/googleAuthRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 import session from "express-session";
 import passportConfig from "./config/passport-config.js";
 import { googleAuthMiddleware } from "./middlewares/googleAuthMiddleware.js";
@@ -48,7 +48,7 @@ app.use(passportConfig.initialize());
 app.use(passportConfig.session());
 
 // Ruta de autenticación con Google
-app.use("/auth", googleAuthRoutes);
+app.use("/auth", authRoutes);
 
 // Ruta de Autenticación
 app.get("/", (req, res) => {
