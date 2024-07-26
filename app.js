@@ -31,7 +31,7 @@ connectToDatabase();
 // Configuración de la sesión con express-session
 app.use(
   session({
-    name: "cookie_sid",
+    name: "cookie_sid_google_auth",
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false, // Solo crea la sesión si algo cambia
@@ -52,10 +52,13 @@ app.use("/auth", authRoutes);
 
 // Ruta de Autenticación
 app.get("/", (req, res) => {
+  if (req.isAuthenticated()) {
+    return res.redirect("/notes");
+  }
   res.sendFile(path.join(__dirname, "views", "index.html"));
 });
 
-app.use("/notes", noteRoutes);
+app.use("/api/notes", noteRoutes);
 
 // Ruta principal de la aplicación
 app.get("/notes", googleAuthMiddleware, (req, res) => {

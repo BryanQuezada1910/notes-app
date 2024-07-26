@@ -1,0 +1,44 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #393e46;
+    color: #eeeeee;
+}
+
+nav {
+    background-color: #222831;
+    box-shadow: none;
+    font-weight: 100;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    margin: 0;
+    padding: 0;
+}
+
+#titulo {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+@media only screen and (max-width: 600.8px) {
+
+}
+
+@media only screen and (min-width: 601px) and (max-width: 991.8px) {
+    
+}
+
+@media only screen and (min-width: 992px) {
+    
+}
