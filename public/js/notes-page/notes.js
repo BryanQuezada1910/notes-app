@@ -1,10 +1,17 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const elems = document.querySelectorAll(".sidenav");
-  M.Sidenav.init(elems);
+  const sidenav = document.querySelectorAll(".sidenav");
+  const modals = document.querySelectorAll(".modal");
+  M.Sidenav.init(sidenav);
+  M.Modal.init(modals);
   getNotes();
 });
 
 const notes = document.getElementById("notes");
+
+const formatDate = (dateString) => {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  return new Date(dateString).toLocaleDateString('es-ES', options);
+};
 
 const getNotes = async () => {
   try {
@@ -34,11 +41,12 @@ const getNotes = async () => {
       <div class="card" style="background-color:#222831">
         <div class="card-content">
           <span class="card-title" style="font-weight:600; color:#fd7014">${note.title}</span>
-          <p>${note.content}</p>
+          <p style="margin-bottom:30px">${note.content}</p>
+          <p class="right" style="color:#b5b3b3;">${formatDate(note.createdAt)}</p>
         </div>
         <div class="card-action">
-          <button style="text-transform:none; background-color:#fd7014; color:#222831; border-radius: 50px;" class="delete-button btn" data-id="${note._id}">Eliminar</button>
-          <button style="text-transform:none; background-color:#fd7014; color:#222831; border-radius: 50px;" class="update-button btn" data-id="${note._id}">Actualizar</button>
+          <button style="margin-right:5px; text-transform:none; background-color:#222831; color:#fd7014; border-radius: 50px;" class="delete-button btn" data-id="${note._id}"><strong>Eliminar</strong><i class="material-icons right">delete_forever</i></button>
+          <button style="margin-right:5px; text-transform:none; background-color:#222831; color:#fd7014; border-radius: 50px;" class="update-button btn" data-id="${note._id}" data-title="${note.title}" data-content="${note.content}"><strong>Actualizar</strong><i class="material-icons right">update</i></button>
         </div>
       </div>
       `;
@@ -58,12 +66,12 @@ notes.addEventListener("click", async (event) => {
       const res = await fetch(`/api/notes/${noteId}`, { method: "DELETE" });
       if (res.ok) {
         getNotes(); // Refresh the notes list
+        M.toast({ html: "Nota eliminada correctamente", classes: "toast-custom rounded" }); // Actualizar etiquetas de Materialize
       } else {
         alert("No se pudo eliminar la nota. Por favor, inténtalo de nuevo.");
       }
     } catch (error) {
       console.error("Error al eliminar la nota:", error);
-      alert("No se pudo eliminar la nota. Por favor, inténtalo de nuevo.");
     }
   }
 });
@@ -71,30 +79,74 @@ notes.addEventListener("click", async (event) => {
 notes.addEventListener("click", async (event) => {
   if (event.target.classList.contains("update-button")) {
     const noteId = event.target.getAttribute("data-id");
-    const title = prompt("Introduce el nuevo título de la nota:");
-    const content = prompt("Introduce el nuevo contenido de la nota:");
+    const title = event.target.getAttribute("data-title");
+    const content = event.target.getAttribute("data-content");
+    console.log(noteId, title, content);
+    const modal = M.Modal.getInstance(document.getElementById("update-modal"));
 
-    if (!title || !content) {
-      alert("Por favor, introduce un título y contenido para la nota.");
-      return;
-    }
+    // Pre-rellenar los campos del modal con los datos de la nota
+    document.getElementById("update-title").value = title;
+    document.getElementById("update-content").value = content;
 
-    try {
-      const res = await fetch(`/api/notes/${noteId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, content }),
-      });
+    // Abrir el modal
+    modal.open();
 
-      if (res.ok) {
-        getNotes(); // Refresh the notes list
-      } else {
+    // Actualizar la nota al hacer clic en el botón de actualización del modal
+    document.getElementById("update-note-btn").onclick = async () => {
+      const updatedTitle = document.getElementById("update-title").value;
+      const updatedContent = document.getElementById("update-content").value;
+
+      if (!updatedTitle || !updatedContent) {
+        M.toast({
+          html: "Por favor, introduce un título y contenido para la nota",
+          classes: "toast-custom rounded",
+          displayLength: 2000,
+          inDuration: 300,
+          outDuration: 375,
+        });
+        modal.destroy();
+        return;
+      }
+
+      if (updatedTitle === title && updatedContent === content) {
+        M.toast({
+          html: "Por favor, actualiza el título o el contenido de la nota",
+          classes: "toast-custom rounded",
+          displayLength: 2000,
+          inDuration: 300,
+          outDuration: 375,
+        });
+        modal.destroy();
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/notes/${noteId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: updatedTitle,
+            content: updatedContent,
+          }),
+        });
+
+        if (res.ok) {
+          getNotes(); // Refrescar la lista de notas
+          M.toast({
+            html: "Nota actualizada correctamente",
+            classes: "toast-custom rounded",
+          });
+          modal.destroy();
+        } else {
+          alert(
+            "No se pudo actualizar la nota. Por favor, inténtalo de nuevo."
+          );
+        }
+      } catch (error) {
+        console.error("Error al actualizar la nota:", error);
         alert("No se pudo actualizar la nota. Por favor, inténtalo de nuevo.");
       }
-    } catch (error) {
-      console.error("Error al actualizar la nota:", error);
-      alert("No se pudo actualizar la nota. Por favor, inténtalo de nuevo.");
-    }
+    };
   }
 });
 
@@ -102,12 +154,19 @@ const newNoteForm = document.getElementById("new-note-form");
 
 newNoteForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+  const resetButton = document.getElementById("cancel-button");
 
   const title = document.getElementById("title").value;
   const content = document.getElementById("content").value;
 
   if (!title || !content) {
-    alert("Por favor, introduce un título y contenido para la nota.");
+    M.toast({
+      html: "Por favor, introduce un título y contenido para la nota",
+      classes: "toast-custom rounded",
+      displayLength: 2000,
+      inDuration: 300,
+      outDuration: 375,
+    });
     return;
   }
 
@@ -120,13 +179,13 @@ newNoteForm.addEventListener("submit", async (event) => {
 
     if (res.ok) {
       getNotes(); // Refresh the notes list
-      newNoteForm.reset();
-      M.updateTextFields(); // Actualizar etiquetas de Materialize
+      M.toast({ html: "Nota creada correctamente", classes: "toast-custom rounded" }); // Actualizar etiquetas de Materialize
+      resetButton.click();
+      return;
     } else {
       alert("No se pudo crear la nota. Por favor, inténtalo de nuevo.");
     }
   } catch (error) {
     console.error("Error al crear la nota:", error);
-    alert("No se pudo crear la nota. Por favor, inténtalo de nuevo.");
   }
 });

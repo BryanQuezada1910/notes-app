@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -25,7 +25,7 @@
       <!--Navbar-->
       <nav>
         <div class="container nav-wrapper">
-          <a href="#!" class="brand-logo">TO-DO</a>
+          <a href="#!" class="brand-logo">Inicio</a>
           <a href="#" data-target="mobile-demo" class="sidenav-trigger"
             ><i class="material-icons">menu</i></a
           >
@@ -56,10 +56,56 @@
           >
         </li>
       </ul>
+
+      <!-- Modal Structure -->
+      <div id="update-modal" class="modal" style="background-color: #222831;">
+        <div class="modal-content">
+          <h4 style="color: #fd7014;">Actualizar Nota</h4>
+          <div class="input-field">
+            <input
+              style="color: #eeeeee;"
+              id="update-title"
+              type="text"
+              class="validate"
+            />
+          </div>
+          <div class="input-field">
+            <input
+              style="color: #eeeeee;"
+              id="update-content"
+              type="text"
+              class="validate"
+            />
+          </div>
+        </div>
+        <div style="background-color: #393e46;" class="modal-footer">
+          <a
+            style="text-transform: none; color: #fd7014;"
+            href="#!"
+            class="modal-close waves-effect waves-green btn-flat"
+            ><strong>Cancelar</strong></a
+          >
+          <button
+            id="update-note-btn"
+            class="modal-close waves-effect waves-green btn-flat"
+            style="text-transform: none; color: #fd7014;"
+          >
+            <strong>Actualizar</strong>
+          </button>
+        </div>
+      </div>
+
       <div class="container">
-        <h1 id="titulo">Bienvenido a la app de notas</h1>
+        <h1 id="titulo" class="center">
+          <span style="color: #fd7014;">TO-DO</span> App
+          <img
+            style="width: 56px;"
+            src="https://images.vexels.com/media/users/3/315209/isolated/preview/8bb1dca3b087126559b5c8910d2969e2-un-cuaderno-encuadernado-en-espiral.png"
+            alt="Libreta"
+          />
+        </h1>
         <div class="row">
-          <div class="col s12 m6">
+          <div class="col s12 m8">
             <form id="new-note-form">
               <div class="input-field">
                 <input
@@ -77,13 +123,13 @@
                   class="validate"
                   style="color: #eeeeee;"
                 />
-                <label for="content">Nota</label>
+                <label for="content">Contenido</label>
               </div>
               <button
                 class="btn waves-effect waves-light"
                 type="submit"
                 name="action"
-                style="text-transform: none; background-color: #fd7014; color: #222831; border-radius: 50px;"
+                style="text-transform: none; background-color: #fd7014; color: #222831; border-radius: 50px; margin-right: 5px; margin-bottom: 8px;"
               >
                 Agregar Nota
                 <i class="material-icons right">send</i>
@@ -92,13 +138,15 @@
                 class="btn waves-effect waves-light"
                 type="reset"
                 name="reset"
-                style="text-transform: none; background-color: #fd7014; color: #222831; border-radius: 50px;"
+                style="text-transform: none; background-color: #fd7014; color: #222831; border-radius: 50px; margin-bottom: 8px;"
+                id="cancel-button"
               >
                 Cancelar
                 <i class="material-icons right">cancel</i>
               </button>
             </form>
           </div>
+          <div class="col s12 m4"></div>
         </div>
         <div class="row">
           <div id="notes"></div>

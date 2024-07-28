@@ -15,7 +15,6 @@ export const getNotes = async (req, res) => {
 export const createNote = async (req, res) => {
   try {
     const { title, content } = req.body;
-    console.log(title, content, req.user._id);
     const note = new Note({
       title,
       content,
@@ -31,6 +30,9 @@ export const createNote = async (req, res) => {
 export const updateNote = async (req, res) => {
   try {
     const { title, content } = req.body;
+    if (!title || !content) {
+      return res.status(400).json({ message: 'Por favor, ingresa un título y contenido' });
+    }
     await Note.findByIdAndUpdate(req.params.id, { title, content });
     res.status(200).json({ message: 'Nota actualizada correctamente' });
   } catch (error) {

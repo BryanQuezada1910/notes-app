@@ -8,6 +8,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { connectToDatabase } from "./config/database.js";
 import noteRoutes from "./routes/noteRoutes.js";
+import cors from "cors";
 
 // Configuración de variables de entorno
 configDotenv();
@@ -20,6 +21,17 @@ const __dirname = path.dirname(__filename);
 const PORT = process.env.PORT || 5000;
 
 const app = express();
+
+// const corsOptions = {
+//   origin: process.env.CLIENT_URL ?? "http://localhost:3000",
+//   credentials: true,
+//   optionsSuccessStatus: 200,
+//   allowedHeaders: ["Content-Type", "Authorization"],
+//   allowedMethods: ["GET", "POST", "PUT", "DELETE"],
+
+// };
+
+// app.use(cors( corsOptions ));
 
 app.use(express.json());
 
@@ -50,12 +62,16 @@ app.use(passportConfig.session());
 // Ruta de autenticación con Google
 app.use("/auth", authRoutes);
 
-// Ruta de Autenticación
+// Ruta principal de la aplicación (login)
 app.get("/", (req, res) => {
   if (req.isAuthenticated()) {
     return res.redirect("/notes");
   }
   res.sendFile(path.join(__dirname, "views", "index.html"));
+});
+
+app.get("/register", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "register.html"));
 });
 
 app.use("/api/notes", noteRoutes);
