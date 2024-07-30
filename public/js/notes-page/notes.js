@@ -2,15 +2,20 @@ document.addEventListener("DOMContentLoaded", function () {
   const sidenav = document.querySelectorAll(".sidenav");
   const modals = document.querySelectorAll(".modal");
   M.Sidenav.init(sidenav);
-  M.Modal.init(modals);
+  M.Modal.init(modals, {
+    startingTop: "30%",
+    endingTop: "30%",
+  });
+
+  // Obtener las notas cuando la página se carga
   getNotes();
 });
 
 const notes = document.getElementById("notes");
 
 const formatDate = (dateString) => {
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  return new Date(dateString).toLocaleDateString('es-ES', options);
+  const options = { year: "numeric", month: "long", day: "numeric" };
+  return new Date(dateString).toLocaleDateString("es-ES", options);
 };
 
 const getNotes = async () => {
@@ -40,13 +45,23 @@ const getNotes = async () => {
       noteElement.innerHTML = `
       <div class="card" style="background-color:#222831">
         <div class="card-content">
-          <span class="card-title" style="font-weight:600; color:#fd7014">${note.title}</span>
+          <span class="card-title" style="font-weight:600; color:#fd7014">${
+            note.title
+          }</span>
           <p style="margin-bottom:30px">${note.content}</p>
-          <p class="right" style="color:#b5b3b3;">${formatDate(note.createdAt)}</p>
+          <p class="right" style="color:#b5b3b3;">${formatDate(
+            note.createdAt
+          )}</p>
         </div>
-        <div class="card-action">
-          <button style="margin-right:5px; text-transform:none; background-color:#222831; color:#fd7014; border-radius: 50px;" class="delete-button btn" data-id="${note._id}"><strong>Eliminar</strong><i class="material-icons right">delete_forever</i></button>
-          <button style="margin-right:5px; text-transform:none; background-color:#222831; color:#fd7014; border-radius: 50px;" class="update-button btn" data-id="${note._id}" data-title="${note.title}" data-content="${note.content}"><strong>Actualizar</strong><i class="material-icons right">update</i></button>
+        <div id="card-action-id" class="card-action">
+          <button style="margin-right:5px; text-transform:none; background-color:#222831; color:#fd7014; border-radius: 50px; font-weight:600" class="delete-button btn" data-id="${
+            note._id
+          }">Eliminar<i class="material-icons right">delete_forever</i></button>
+          <button style="margin-right:5px; text-transform:none; background-color:#222831; color:#fd7014; border-radius: 50px; font-weight:600" class="update-button btn" data-id="${
+            note._id
+          }" data-title="${note.title}" data-content="${
+        note.content
+      }">Actualizar<i class="material-icons right">update</i></button>
         </div>
       </div>
       `;
@@ -66,7 +81,10 @@ notes.addEventListener("click", async (event) => {
       const res = await fetch(`/api/notes/${noteId}`, { method: "DELETE" });
       if (res.ok) {
         getNotes(); // Refresh the notes list
-        M.toast({ html: "Nota eliminada correctamente", classes: "toast-custom rounded" }); // Actualizar etiquetas de Materialize
+        M.toast({
+          html: "Nota eliminada correctamente",
+          classes: "toast-custom rounded",
+        }); // Actualizar etiquetas de Materialize
       } else {
         alert("No se pudo eliminar la nota. Por favor, inténtalo de nuevo.");
       }
@@ -81,7 +99,6 @@ notes.addEventListener("click", async (event) => {
     const noteId = event.target.getAttribute("data-id");
     const title = event.target.getAttribute("data-title");
     const content = event.target.getAttribute("data-content");
-    console.log(noteId, title, content);
     const modal = M.Modal.getInstance(document.getElementById("update-modal"));
 
     // Pre-rellenar los campos del modal con los datos de la nota
@@ -104,7 +121,6 @@ notes.addEventListener("click", async (event) => {
           inDuration: 300,
           outDuration: 375,
         });
-        modal.destroy();
         return;
       }
 
@@ -116,7 +132,6 @@ notes.addEventListener("click", async (event) => {
           inDuration: 300,
           outDuration: 375,
         });
-        modal.destroy();
         return;
       }
 
@@ -136,7 +151,7 @@ notes.addEventListener("click", async (event) => {
             html: "Nota actualizada correctamente",
             classes: "toast-custom rounded",
           });
-          modal.destroy();
+          modal.close();
         } else {
           alert(
             "No se pudo actualizar la nota. Por favor, inténtalo de nuevo."
@@ -161,7 +176,7 @@ newNoteForm.addEventListener("submit", async (event) => {
 
   if (!title || !content) {
     M.toast({
-      html: "Por favor, introduce un título y contenido para la nota",
+      html: "Por favor, introduce el título y el contenido de la nota",
       classes: "toast-custom rounded",
       displayLength: 2000,
       inDuration: 300,
@@ -179,7 +194,10 @@ newNoteForm.addEventListener("submit", async (event) => {
 
     if (res.ok) {
       getNotes(); // Refresh the notes list
-      M.toast({ html: "Nota creada correctamente", classes: "toast-custom rounded" }); // Actualizar etiquetas de Materialize
+      M.toast({
+        html: "Nota creada correctamente",
+        classes: "toast-custom rounded",
+      }); // Actualizar etiquetas de Materialize
       resetButton.click();
       return;
     } else {
