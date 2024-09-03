@@ -11,6 +11,8 @@ document.addEventListener("DOMContentLoaded", function () {
   getNotes();
 });
 
+const imageURL =
+  "https://cdn.pixabay.com/photo/2012/04/12/12/29/note-29813_1280.png";
 const notes = document.getElementById("notes");
 
 const formatDate = (dateString) => {
@@ -42,16 +44,25 @@ const getNotes = async () => {
     notesData.forEach((note) => {
       const noteElement = document.createElement("div");
       noteElement.classList.add("col", "s12", "m6");
+      let checked = note.completed ? "Completada" : "Pendiente";
+      // let color = note.completed ? "#fd7014" : "#b5b3b3";
+      let backgroundColor = note.completed ? "#b5b3b3" : "#fd7014";
+      let dataCompleted = note.completed ? "true" : "false";
       noteElement.innerHTML = `
       <div class="card" style="background-color:#222831">
+        <div class="card-image waves-effect waves-block waves-light">
+          <img class="activator center" src="${imageURL}" alt="Note image" style="width:100px;">
+        </div>
         <div class="card-content">
-          <span class="card-title" style="font-weight:600; color:#fd7014">${
+          <span class="card-title activator" style="font-weight:600; color:#fd7014">${
             note.title
-          }</span>
-          <p style="margin-bottom:30px">${note.content}</p>
+          }<i class="material-icons right">more_vert</i></span>
           <p class="right" style="color:#b5b3b3;">${formatDate(
             note.createdAt
           )}</p>
+          <button style="margin-right:5px; text-transform:none; background-color:${backgroundColor}; color:#222831; border-radius: 50px; font-weight:600" class="btn update-status-button" data-id="${
+        note.id
+      }">${checked}</button>
         </div>
         <div id="card-action-id" class="card-action">
           <button style="margin-right:5px; text-transform:none; background-color:#222831; color:#fd7014; border-radius: 50px; font-weight:600" class="delete-button btn" data-id="${
@@ -61,7 +72,14 @@ const getNotes = async () => {
             note._id
           }" data-title="${note.title}" data-content="${
         note.content
-      }">Actualizar<i class="material-icons right">update</i></button>
+      }" data-completed="${dataCompleted}">
+          Actualizar<i class="material-icons right">update</i></button>
+        </div>
+        <div class="card-reveal" style="background-color:#222831">
+          <span class="card-title" style="font-weight:600; color:#fd7014">${
+            note.title
+          }<i class="material-icons right">close</i></span>
+          <p style="margin-bottom:30px">${note.content}</p>
         </div>
       </div>
       `;
@@ -95,9 +113,46 @@ notes.addEventListener("click", async (event) => {
 });
 
 notes.addEventListener("click", async (event) => {
+  if (event.target.classList.contains("update-status-button")) {
+    const noteId = event.target.getAttribute("data-id");
+    const status = event.target.textContent;
+    const completed = status === "Pendiente" ? true : false;
+    try {
+      const res = await fetch(`/api/notes/${noteId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          status: completed,
+        }),
+      });
+
+      if (res.ok) {
+        getNotes(); // Refrescar la lista de notas
+
+        M.toast({
+          html: `Nota ${completed ? "completada" : "pendiente"} correctamente`,
+          classes: "toast-custom rounded",
+        });
+      } else {
+        alert(
+          "No se pudo actualizar el estado de la nota. Por favor, inténtalo de nuevo."
+        );
+      }
+    } catch (error) {
+      console.error("Error al actualizar el estado de la nota:", error);
+      alert(
+        "No se pudo actualizar el estado de la nota. Por favor, inténtalo de nuevo."
+      );
+    }
+  }
+});
+
+notes.addEventListener("click", async (event) => {
   if (event.target.classList.contains("update-button")) {
     const noteId = event.target.getAttribute("data-id");
     const title = event.target.getAttribute("data-title");
+    const completed = event.target.getAttribute("data-completed");
+    console.log(completed);
     const content = event.target.getAttribute("data-content");
     const modal = M.Modal.getInstance(document.getElementById("update-modal"));
 
@@ -142,6 +197,7 @@ notes.addEventListener("click", async (event) => {
           body: JSON.stringify({
             title: updatedTitle,
             content: updatedContent,
+            status: completed,
           }),
         });
 

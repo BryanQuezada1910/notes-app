@@ -64,6 +64,7 @@
         <div class="modal-content">
           <h4 style="color: #fd7014;">Actualizar Nota</h4>
           <div class="input-field">
+            <span style="color: #fd7014; font-weight: 600;">Título:</span>
             <input
               style="color: #eeeeee;"
               id="update-title"
@@ -72,6 +73,7 @@
             />
           </div>
           <div class="input-field">
+            <span style="color: #fd7014; font-weight: 600;">Contenido:</span>
             <input
               style="color: #eeeeee;"
               id="update-content"
@@ -121,12 +123,11 @@
                 <label for="title">Título</label>
               </div>
               <div class="input-field">
-                <input
+                <textarea
                   id="content"
-                  type="text"
-                  class="validate"
+                  class="materialize-textarea"
                   style="color: #eeeeee;"
-                />
+                /></textarea>
                 <label for="content">Contenido</label>
               </div>
               <button
