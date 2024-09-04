@@ -33,20 +33,28 @@ export const createNote = async (req, res) => {
 
 export const updateNote = async (req, res) => {
   try {
-    const { title, content, status } = req.body;
-    const completed = status === 'true' ? true : false;
+    const { title, content} = req.body;
     if (!title || !content) {
       return res.status(400).json({ message: 'Por favor, ingresa un título y contenido' });
     }
 
-    if (typeof completed !== 'boolean') {
-      return res.status(400).json({ message: 'Por favor, ingresa un valor booleano para el estado' });
-    }
-
-    await Note.findByIdAndUpdate(req.params.id, { title, content, completed });
+    await Note.findByIdAndUpdate(req.params.id, { title, content });
     return res.status(200).json({ message: 'Nota actualizada correctamente' });
   } catch (error) {
     return res.status(500).json({ message: 'Error al actualizar la nota' });
+  }
+};
+
+export const updateStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    
+    if (typeof status !== 'boolean') return res.status(400).json({ message: 'Por favor, ingresa un valor booleano para el estado' });
+
+    await Note.findByIdAndUpdate(req.params.id, { status });
+    return res.status(200).json({ message: 'Estado de la nota actualizado correctamente' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error al actualizar el estado de la nota' });
   }
 };
 

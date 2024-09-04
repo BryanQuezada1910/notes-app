@@ -11,8 +11,6 @@ document.addEventListener("DOMContentLoaded", function () {
   getNotes();
 });
 
-const imageURL =
-  "https://cdn.pixabay.com/photo/2012/04/12/12/29/note-29813_1280.png";
 const notes = document.getElementById("notes");
 
 const formatDate = (dateString) => {
@@ -25,7 +23,7 @@ const getNotes = async () => {
     const res = await fetch("/api/notes");
     if (!res.ok) {
       if (res.status === 404) {
-        notes.innerHTML = "<p>No hay notas</p>";
+        notes.innerHTML = "<p>No has creado ninguna nota</p>";
       } else if (res.status === 500) {
         notes.innerHTML =
           "<p>Error al obtener las notas. Por favor, inténtalo de nuevo más tarde.</p>";
@@ -43,16 +41,11 @@ const getNotes = async () => {
     notes.innerHTML = "";
     notesData.forEach((note) => {
       const noteElement = document.createElement("div");
-      noteElement.classList.add("col", "s12", "m6");
-      let checked = note.completed ? "Completada" : "Pendiente";
-      // let color = note.completed ? "#fd7014" : "#b5b3b3";
-      let backgroundColor = note.completed ? "#b5b3b3" : "#fd7014";
-      let dataCompleted = note.completed ? "true" : "false";
+      noteElement.classList.add("col", "s12", "m12" , "l6");
+      let checked = note.status ? "Completada" : "Pendiente";
+      let backgroundColor = note.status ? "#4caf50" : "#f44336";
       noteElement.innerHTML = `
       <div class="card" style="background-color:#222831">
-        <div class="card-image waves-effect waves-block waves-light">
-          <img class="activator center" src="${imageURL}" alt="Note image" style="width:100px;">
-        </div>
         <div class="card-content">
           <span class="card-title activator" style="font-weight:600; color:#fd7014">${
             note.title
@@ -60,9 +53,8 @@ const getNotes = async () => {
           <p class="right" style="color:#b5b3b3;">${formatDate(
             note.createdAt
           )}</p>
-          <button style="margin-right:5px; text-transform:none; background-color:${backgroundColor}; color:#222831; border-radius: 50px; font-weight:600" class="btn update-status-button" data-id="${
-        note.id
-      }">${checked}</button>
+          <button style="margin-top:25px; text-transform:none; background-color:${backgroundColor}; color:#222831; border-radius: 50px; font-weight:600" class="btn update-status-button"
+          data-id="${note._id}" data-status="${note.status}">${checked}</button>
         </div>
         <div id="card-action-id" class="card-action">
           <button style="margin-right:5px; text-transform:none; background-color:#222831; color:#fd7014; border-radius: 50px; font-weight:600" class="delete-button btn" data-id="${
@@ -71,9 +63,8 @@ const getNotes = async () => {
           <button style="margin-right:5px; text-transform:none; background-color:#222831; color:#fd7014; border-radius: 50px; font-weight:600" class="update-button btn" data-id="${
             note._id
           }" data-title="${note.title}" data-content="${
-        note.content
-      }" data-completed="${dataCompleted}">
-          Actualizar<i class="material-icons right">update</i></button>
+          note.content
+          }">Actualizar<i class="material-icons right">update</i></button>
         </div>
         <div class="card-reveal" style="background-color:#222831">
           <span class="card-title" style="font-weight:600; color:#fd7014">${
@@ -114,35 +105,45 @@ notes.addEventListener("click", async (event) => {
 
 notes.addEventListener("click", async (event) => {
   if (event.target.classList.contains("update-status-button")) {
-    const noteId = event.target.getAttribute("data-id");
-    const status = event.target.textContent;
-    const completed = status === "Pendiente" ? true : false;
+    const button = event.target;
+    const noteId = button.getAttribute("data-id");
+    let completed = button.getAttribute("data-status") === "true";
+
+    completed = !completed; // Cambiar el estado de la nota
+
+    // Deshabilitar toda la interfaz temporalmente
+    notes.style.pointerEvents = "none"; // Deshabilita todos los clics
+
     try {
-      const res = await fetch(`/api/notes/${noteId}`, {
+      const res = await fetch(`/api/notes/status/${noteId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          status: completed,
-        }),
+        body: JSON.stringify({ status: completed }),
       });
 
       if (res.ok) {
-        getNotes(); // Refrescar la lista de notas
-
         M.toast({
-          html: `Nota ${completed ? "completada" : "pendiente"} correctamente`,
+          html: `Estado de la nota actualizado correctamente a ${completed ? "Completada" : "Pendiente"}`,
           classes: "toast-custom rounded",
         });
+        getNotes(); // Refrescar la lista de notas
       } else {
-        alert(
-          "No se pudo actualizar el estado de la nota. Por favor, inténtalo de nuevo."
-        );
+        M.toast({ 
+          html: "No se pudo actualizar el estado de la nota. Por favor, inténtalo de nuevo.", 
+          classes: "toast-custom rounded"
+        });
       }
     } catch (error) {
       console.error("Error al actualizar el estado de la nota:", error);
-      alert(
-        "No se pudo actualizar el estado de la nota. Por favor, inténtalo de nuevo."
-      );
+      M.toast({ 
+        html: "No se pudo actualizar el estado de la nota. Por favor, inténtalo de nuevo.", 
+        classes: "toast-custom rounded"
+      });
+    } finally {
+      // Reactiva la interfaz después de actualizar las notas
+      setTimeout(() => {
+        notes.style.pointerEvents = "auto"; // Reactiva los clics
+      }, 2000);
     }
   }
 });
@@ -151,8 +152,7 @@ notes.addEventListener("click", async (event) => {
   if (event.target.classList.contains("update-button")) {
     const noteId = event.target.getAttribute("data-id");
     const title = event.target.getAttribute("data-title");
-    const completed = event.target.getAttribute("data-completed");
-    console.log(completed);
+    const completed = event.target.getAttribute("data-status");
     const content = event.target.getAttribute("data-content");
     const modal = M.Modal.getInstance(document.getElementById("update-modal"));
 
@@ -172,9 +172,6 @@ notes.addEventListener("click", async (event) => {
         M.toast({
           html: "Por favor, introduce un título y contenido para la nota",
           classes: "toast-custom rounded",
-          displayLength: 2000,
-          inDuration: 300,
-          outDuration: 375,
         });
         return;
       }
@@ -183,9 +180,6 @@ notes.addEventListener("click", async (event) => {
         M.toast({
           html: "Por favor, actualiza el título o el contenido de la nota",
           classes: "toast-custom rounded",
-          displayLength: 2000,
-          inDuration: 300,
-          outDuration: 375,
         });
         return;
       }
@@ -209,13 +203,17 @@ notes.addEventListener("click", async (event) => {
           });
           modal.close();
         } else {
-          alert(
-            "No se pudo actualizar la nota. Por favor, inténtalo de nuevo."
-          );
+          M.toast({ 
+            html: "No se pudo actualizar el contenido de la nota. Por favor, inténtalo de nuevo.", 
+            classes: "toast-custom rounded"
+          });
         }
       } catch (error) {
         console.error("Error al actualizar la nota:", error);
-        alert("No se pudo actualizar la nota. Por favor, inténtalo de nuevo.");
+        M.toast({ 
+          html: "No se pudo actualizar la nota. Por favor, inténtalo de nuevo.", 
+          classes: "toast-custom rounded"
+        });
       }
     };
   }
@@ -257,9 +255,16 @@ newNoteForm.addEventListener("submit", async (event) => {
       resetButton.click();
       return;
     } else {
-      alert("No se pudo crear la nota. Por favor, inténtalo de nuevo.");
+      M.toast({ 
+        html: "No se pudo crear la nota. Por favor, inténtalo de nuevo.", 
+        classes: "toast-custom rounded"
+      });
     }
   } catch (error) {
     console.error("Error al crear la nota:", error);
+    M.toast({ 
+      html: "No se pudo crear la nota. Por favor, inténtalo de nuevo.", 
+      classes: "toast-custom rounded"
+    });
   }
 });

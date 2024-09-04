@@ -13,7 +13,7 @@ const NoteSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  completed: {
+  status: {
     type: Boolean,
     default: false,
   },

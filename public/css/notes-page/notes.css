@@ -37,6 +37,10 @@ p {
     font-weight: 600;
 }
 
+.note-card {
+    max-width: 500px;
+}
+
 @media only screen and (max-width: 600.8px) {}
 
 @media only screen and (min-width: 601px) and (max-width: 791.8px) {
@@ -45,6 +49,8 @@ p {
     }
 }
 
-@media only screen and (min-width: 601px) and (max-width: 991.8px) {}
+@media only screen and (min-width: 601px) and (max-width: 991.8px) {
+    
+}
 
 @media only screen and (min-width: 992px) {}
