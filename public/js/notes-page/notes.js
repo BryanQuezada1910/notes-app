@@ -45,32 +45,33 @@ const getNotes = async () => {
       let checked = note.status ? "Completada" : "Pendiente";
       let backgroundColor = note.status ? "#4caf50" : "#f44336";
       noteElement.innerHTML = `
-      <div class="card" style="background-color:#222831">
+      <div class="card" style="background-color:#222831; max-width: 844px">
         <div class="card-content">
-          <span class="card-title activator" style="font-weight:600; color:#fd7014">${
+          <span class="card-title activator" style="font-weight:600; color:#fd7014; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; width: 100%;">${
             note.title
-          }<i class="material-icons right">more_vert</i></span>
-          <p class="right" style="color:#b5b3b3;">${formatDate(
+          }</span>
+          <i style="position: absolute; top:30px; right:2px; cursor: pointer; color:#fd7014;" class="activator material-icons">more_vert</i>
+          <p style="position: absolute; right:5px; bottom:80px; color:#b5b3b3;">${formatDate(
             note.createdAt
           )}</p>
-          <button style="margin-top:25px; text-transform:none; background-color:${backgroundColor}; color:#222831; border-radius: 50px; font-weight:600" class="btn update-status-button"
+          <button style="margin-top:25px; text-transform:none; background-color:${backgroundColor}; color:#FFFFFF; border-radius: 50px; font-weight:600" class="btn update-status-button"
           data-id="${note._id}" data-status="${note.status}">${checked}</button>
         </div>
         <div id="card-action-id" class="card-action">
-          <button style="margin-right:5px; text-transform:none; background-color:#222831; color:#fd7014; border-radius: 50px; font-weight:600" class="delete-button btn" data-id="${
+          <button style="margin: 5px 5px 5px 0; text-transform:none; background-color:#222831; color:#fd7014; border-radius: 50px; font-weight:600" class="delete-button btn" data-id="${
             note._id
           }">Eliminar<i class="material-icons right">delete_forever</i></button>
-          <button style="margin-right:5px; text-transform:none; background-color:#222831; color:#fd7014; border-radius: 50px; font-weight:600" class="update-button btn" data-id="${
+          <button style="margin: 5px 5px 5px 0; text-transform:none; background-color:#222831; color:#fd7014; border-radius: 50px; font-weight:600" class="update-button btn" data-id="${
             note._id
           }" data-title="${note.title}" data-content="${
           note.content
           }">Actualizar<i class="material-icons right">update</i></button>
         </div>
-        <div class="card-reveal" style="background-color:#222831">
-          <span class="card-title" style="font-weight:600; color:#fd7014">${
+        <div class="card-reveal" style="overflow-wrap: break-word; background-color:#222831;">
+          <span class="card-title" style="font-weight:600; color:#fd7014;">${
             note.title
-          }<i class="material-icons right">close</i></span>
-          <p style="margin-bottom:30px">${note.content}</p>
+          }<i style="position: absolute; top:8px; right:8px; cursor: pointer; color:#9e9e9e; font-weight:600;" class="material-icons right">arrow_back</i></span>
+          <p style="color:#9e9e9e;">${note.content}</p>
         </div>
       </div>
       `;
