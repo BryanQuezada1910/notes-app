@@ -22,3 +22,25 @@ export const logout = (req, res, next) => {
     res.redirect('/'); // Redirige a la página principal o a la de login
   });
 };
+
+export const getProfileInfo = (req, res) => {
+  if (req.isAuthenticated()) {
+    // Devolver información formateada del usuario
+    const user = req.user;
+    
+    res.json({
+      id: user._id || user.id,
+      googleId: user.googleId,
+      displayName: user.displayName,
+      firstName: user.displayName ? user.displayName.split(' ')[0] : '',
+      email: user.email,
+      profileImage: user.profileImage || user.image || '', // Compatibilidad con ambos nombres de campo
+      createdAt: user.createdAt
+    });
+  } else {
+    res.status(401).json({
+      message: "No autenticado",
+      success: false
+    });
+  }
+}
